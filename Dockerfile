@@ -56,7 +56,15 @@ ENV ALLOW_OVERRIDE All
 ENV DATE_TIMEZONE UTC
 ENV TERM dumb
 
-COPY index.php /var/www/html/
+# Wordpress configuration
+RUN cd /tmp && curl -O https://wordpress.org/latest.tar.gz
+RUN tar xzvf /tmp/latest.tar.gz
+RUN touch /tmp/wordpress/.htaccess
+RUN chmod 660 /tmp/wordpress/.htaccess
+RUN cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
+RUN mkdir /tmp/wordpress/wp-content/upgrade
+RUN cp -a /tmp/wordpress/. /var/www/html
+
 COPY run-lamp.sh /usr/sbin/
 
 RUN a2enmod rewrite
